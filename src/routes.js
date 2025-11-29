@@ -2,10 +2,10 @@ const dotenv = require("dotenv");
 dotenv.config();
 const { Router } = require("express");
 
-const router = Router();
+const roteador = Router();
 
-router.get("/", (req, res) => {
+roteador.get("/", (req, res) => {
     res.render("test");
 });
 
-module.exports = router;
+module.exports = roteador;
