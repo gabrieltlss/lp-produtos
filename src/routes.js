@@ -1,9 +1,11 @@
+const dotenv = require("dotenv");
+dotenv.config();
 const { Router } = require("express");
 
 const router = Router();
 
 router.get("/", (req, res) => {
-    res.json({ status: "Ok" });
+    res.render("test");
 });
 
 module.exports = router;
