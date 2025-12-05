@@ -1,11 +1,11 @@
 const { Router } = require("express");
-const { paginaEntrada, autenticarAdmin } = require("../controllers/controladorAdmin");
+const { login, authAdmin } = require("./controllers/admin-controller");
 
-const roteador = Router();
+const router = Router();
 
 // Rotas do administrador
-roteador.get("/login", paginaEntrada);
-roteador.post("/autenticarAdmin", autenticarAdmin);
+router.get("/login", login);
+router.post("/autenticarAdmin", authAdmin);
 // Próxima rota -> admin
 
-module.exports = roteador;
+module.exports = router;
