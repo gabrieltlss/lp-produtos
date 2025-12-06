@@ -4,25 +4,36 @@ const pool = poolFunc();
 
 // Funções para usuário administrados
 async function getAdmin(email) {
-    const [usuario] = await pool.execute(
-        "SELECT * FROM usuario WHERE email = ?;",
-        [email]
-    );
-    return usuario[0];
+    try {
+        const [user] = await pool.execute(
+            "SELECT * FROM user WHERE email = ?;",
+            [email]
+        );
+        return user[0];
+    } catch (error) {
+        throw new Error("Erro ao obter usuário.");
+    }
 }
 
-async function createAdmin(email, senha) {
-    // MySQL não possui função 'returning'. Pensa noutra solução.
-    const [resposta] = await pool.execute(
-        "INSERT INTO usuario (email, senha) VALUES (?, ?);",
-        [email, senha]
-    );
-    return resposta;
+async function createAdmin(email, password) {
+    try {
+        const [result] = await pool.execute(
+            "INSERT INTO user (email, password) VALUES (?, ?);",
+            [email, password]
+        );
+        return result;
+    } catch (error) {
+        throw new Error("Erro ao criar usuário.");
+    }
 }
 
 async function deleteAdmin(email) {
-    const [resposta] = await pool.execute("DELETE FROM usuario WHERE email = ?;");
-    return resposta;
+    try {
+        const [result] = await pool.execute("DELETE FROM user WHERE email = ?;");
+        return result;
+    } catch (error) {
+        throw new Error("Erro ao excluir usuário.");
+    }
 }
 
 module.exports = { getAdmin, createAdmin, deleteAdmin };
