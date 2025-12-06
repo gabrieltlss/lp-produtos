@@ -23,7 +23,7 @@
         </div>
 
         <div class="main-right">
-            <form action="/autenticarAdmin" method="post" id="form">
+            <form action="/authAdmin" method="post" id="form">
                 <h3 class="w3-center">Admin</h3>
                 <div class="w3-section">
                     <label for="email">E-mail:</label>
@@ -37,6 +37,11 @@
 
                 <div class="w3-section">
                     <button type="submit" class="w3-button w3-pink">Entrar</button>
+                    <% if (typeof errorMessage !=='undefined' ) {%>
+                        <span class="w3-margin-left w3-text-red">
+                            <%= errorMessage %>
+                        </span>
+                        <% }%>
                 </div>
             </form>
         </div>

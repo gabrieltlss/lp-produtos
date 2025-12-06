@@ -1,3 +1,5 @@
+const { loginUser } = require("../services/adminServices");
+
 function login(req, res) {
     try {
         res.render("login");
@@ -6,12 +8,15 @@ function login(req, res) {
     }
 }
 
-function authAdmin(req, res) {
+async function authAdmin(req, res) {
     try {
-        // Fazer limpeza dos dados recebidos pelo formulário (Depois).
+        const email = req.body.email;
+        const password = req.body.password;
+        const user = await loginUser(email, password);
 
+        res.json(user);
     } catch (error) {
-
+        res.render("login", { errorMessage: error.message });
     }
 }
 
