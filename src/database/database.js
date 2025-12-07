@@ -3,13 +3,13 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 async function clientFunc() {
-    const cliente = await mysql.createConnection({
+    const client = await mysql.createConnection({
         host: process.env.HOST,
         user: process.env.USUARIO_BD,
         password: process.env.SENHA_BD,
         database: process.env.BANCO_DE_DADOS
     })
-    return cliente;
+    return client;
 }
 
 function poolFunc() {
