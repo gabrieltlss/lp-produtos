@@ -3,7 +3,7 @@ const { clientFunc, poolFunc } = require("../database/database");
 const pool = poolFunc();
 
 // Funções para usuário administrados
-async function getAdmin(email) {
+async function getAdminDb(email) {
     try {
         const [user] = await pool.execute(
             "SELECT * FROM user WHERE email = ?;",
@@ -15,7 +15,7 @@ async function getAdmin(email) {
     }
 }
 
-async function createAdmin(email, password) {
+async function createAdminDb(email, password) {
     try {
         const [result] = await pool.execute(
             "INSERT INTO user (email, password) VALUES (?, ?);",
@@ -27,7 +27,7 @@ async function createAdmin(email, password) {
     }
 }
 
-async function deleteAdmin(email) {
+async function deleteAdminDb(email) {
     try {
         const [result] = await pool.execute("DELETE FROM user WHERE email = ?;");
         return result;
@@ -36,4 +36,4 @@ async function deleteAdmin(email) {
     }
 }
 
-module.exports = { getAdmin, createAdmin, deleteAdmin };
+module.exports = { getAdminDb, createAdminDb, deleteAdminDb };

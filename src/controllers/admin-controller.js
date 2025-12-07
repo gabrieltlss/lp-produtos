@@ -39,6 +39,7 @@ async function create(req, res) {
             res.json({ status: "Usuário não criado." });
         }
     } catch (error) {
+        res.json(error.message);
         // Carregarei a página de criação de usuário.
         // Só um usuário admin poderá criar outro usuário.
         // Checar sessão antes de criar usuário.
