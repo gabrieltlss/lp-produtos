@@ -1,5 +1,6 @@
 const express = require("express");
 const router = require("./src/routes");
+const session = require("express-session");
 
 const app = express();
 
@@ -8,6 +9,12 @@ app.set("views", "views");
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(session({
+    secret: process.env.SECRET_SESSION,
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false },
+}));
 
 app.use(router);
 

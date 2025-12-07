@@ -1,11 +1,11 @@
 const { User } = require("../model/User");
-const { getAdmin } = require("../repository/adminRepository");
+const { getAdmin, createAdmin } = require("../repository/adminRepository");
+const bcrypt = require("bcrypt");
 
 /**
  * 
  * @param {string} email 
- * @param {string} password 
- * @returns {boolean}
+ * @param {string} password
  */
 
 function validateCredentials(email, password) {
@@ -19,8 +19,6 @@ function validateCredentials(email, password) {
         password.match(/\s/g) || !password.match(/[0-9]/g) ||
         !password.match(/[a-zA-z]/g) || !password.match(/\W/g)
     ) { throw new Error("Formato de senha inválida") }
-
-    return true;
 }
 
 async function getUser(email) {
@@ -33,7 +31,17 @@ async function loginUser(userEmail, userPassword) {
     validateCredentials(userEmail, userPassword);
     const user = await getUser(userEmail);
     const { id, email, password } = user;
+    const checkPassword = bcrypt.compareSync(userPassword, password);
+    if (!checkPassword) throw new Error("Senha incorreta.");
     return new User(id, email, password);
 }
 
-module.exports = { loginUser };
+async function createUser(userEmail, userPassword) {
+    validateCredentials(userEmail, userPassword);
+    const userExist = await getAdmin(userEmail);
+    if (userExist) throw new Error("Usuário já existe.");
+    const result = await createAdmin(userEmail, bcrypt.hashSync(userPassword, 10));
+    return result;
+}
+
+module.exports = { loginUser, createUser };
