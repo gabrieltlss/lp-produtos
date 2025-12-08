@@ -1,4 +1,5 @@
-const { loginUser, createUser } = require("../services/adminServices");
+const { getAdmin, createAdmin, validatePassword } = require("../services/adminServices");
+const { validateInputs } = require("../services/validationServices");
 
 function loginPage(req, res) {
     try {
@@ -9,15 +10,35 @@ function loginPage(req, res) {
 }
 
 async function authAdmin(req, res) {
+    const email = req.body.email;
+    const password = req.body.password;
+
+    const validInputs = validateInputs(email, password);
+    if (validInputs.valid === false) {
+        res.render("login", { errorMessage: validInputs.error });
+        return;
+    }
+
+    let user = null;
     try {
-        const email = req.body.email;
-        const password = req.body.password;
-        const user = await loginUser(email, password);
-        req.session.user = user.getInfo();
-        res.redirect("/admin");
+        user = await getAdmin(email);
+        if (user.valid === false) {
+            res.render("login", { errorMessage: user.error });
+            return;
+        }
     } catch (error) {
         res.render("login", { errorMessage: error.message });
     }
+
+    const validPassword = validatePassword(password, user.res.password);
+    if (validPassword.valid === false) {
+        res.render("login", { errorMessage: validPassword.error });
+        return;
+    }
+
+    const session = { id: user.res.id, email: user.res.email };
+    req.session.user = session;
+    res.redirect("/admin");
 }
 
 function adminPage(req, res) {
@@ -28,21 +49,31 @@ function adminPage(req, res) {
     }
 }
 
+// Incompleta, será adaptada a página de admin, com res.render().
 async function create(req, res) {
+    const email = req.body.email;
+    const password = req.body.password;
+
+    const validInputs = validateInputs(email, password);
+    if (validInputs.valid === false) {
+        res.render("login", { errorMessage: validInputs.error });
+        return;
+    }
+
     try {
-        const email = req.body.email;
-        const password = req.body.password;
-        const create = await createUser(email, password);
-        if (typeof create.insertId === "number") {
-            res.json({ status: "Usuário criado." });
-        } else {
-            res.json({ status: "Usuário não criado." });
+        const userExist = await getAdmin(email);
+        if (userExist.valid === true) {
+            res.json({ message: "Usuário já existe." });
+            return;
         }
+        const create = await createAdmin(email, password);
+        if (create.valid === false) {
+            res.json({ status: create.error });
+            return;
+        }
+        res.json("Usuário criado.");
     } catch (error) {
         res.json(error.message);
-        // Carregarei a página de criação de usuário.
-        // Só um usuário admin poderá criar outro usuário.
-        // Checar sessão antes de criar usuário.
     }
 }
 
