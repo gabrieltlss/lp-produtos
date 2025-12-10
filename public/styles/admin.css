@@ -4,7 +4,6 @@ body {
 }
 
 main {
-    padding: 16px;
     grid-template-columns: auto;
     gap: 16px;
 }
