@@ -1,10 +1,9 @@
 body {
-    min-height: 100vh;
     background-color: white;
 }
 
 main {
-    grid-template-columns: auto;
+    min-height: 100vh;
     gap: 16px;
 }
 
@@ -12,7 +11,7 @@ main {
     justify-items: center;
     gap: 16px;
     grid-template-columns: auto;
-    grid-template-rows: repeat(3, 250px);
+    grid-template-rows: repeat(3, auto);
 }
 
 .card {
@@ -33,6 +32,6 @@ main {
 @media screen and (min-width: 993px) {
     #dashboard {
         grid-template-columns: 1fr 1fr;
-        grid-template-rows: 300px 300px;
+        grid-template-rows: auto auto;
     }
 }
