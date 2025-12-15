@@ -10,6 +10,7 @@ const storage = multer.diskStorage({
         cb(null, path.join(__dirname, "../public", "img"))
     },
     filename: function (req, file, cb) {
+        req.body.filepath = file.originalname;
         cb(null, file.originalname)
     }
 });
@@ -23,6 +24,6 @@ router.get("/login", loginAuthMiddleware, loginPage);
 router.post("/authAdmin", authAdmin);
 router.get("/admin", adminAuthMiddleware, adminPage);
 router.get("/admin/create", createProductPage);
-router.post("/admin/create/new", uploadImg.single("image"), createProduct);
+router.post("/admin/create/new", uploadImg.single("image-input"), createProduct);
 
 module.exports = router;

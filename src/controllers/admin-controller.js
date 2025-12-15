@@ -1,5 +1,6 @@
 const { getAdmin, createAdmin, validatePassword } = require("../services/adminServices");
 const { validateInputs } = require("../services/validationServices");
+const path = require("node:path");
 
 async function authAdmin(req, res) {
     const email = req.body.email;
@@ -62,11 +63,21 @@ async function createNewAdmin(req, res) {
 }
 
 async function createProduct(req, res) {
-    const body = req.body;
-    console.log(req.file.buffer)
-    console.log(body);
+    const productName = req.body.name;
+    const productPrice = Number(req.body.price);
+    const productUrl = req.body.url;
+    const imgPath = path.join(__dirname, "../../public", "img", req.body.filepath);
 
-    res.json(body)
+    // Criar tabela no banco de dados
+    // Criar funcções do service e do repository
+
+
+    res.json({
+        productName,
+        productPrice,
+        productUrl,
+        imgPath
+    });
 }
 
 module.exports = { authAdmin, createNewAdmin, createProduct };

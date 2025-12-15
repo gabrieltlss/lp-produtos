@@ -1,4 +1,3 @@
-
 const imageInput = document.getElementById("image-input");
 
 imageInput.addEventListener("change", async (ev) => {
@@ -9,11 +8,10 @@ imageInput.addEventListener("change", async (ev) => {
     if (file) {
         reader.readAsDataURL(file);
     } else {
-        preview.src = "";
+        productImage.src = "";
     }
 
     reader.onloadend = function () {
         productImage.src = reader.result;
-        console.log(reader.result)
     }
 })
