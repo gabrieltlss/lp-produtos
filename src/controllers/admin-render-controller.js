@@ -14,12 +14,24 @@ function adminPage(req, res) {
     }
 }
 
-async function createProductPage(req, res) {
+//  === PRODUCT ===
+
+function createProductPage(req, res) {
     try {
-        res.render("create");
+        res.render("create-product");
     } catch (error) {
-        res.status(500).json("Erro ao renderizar view.");
+        res.status(500).json({ error: "Erro ao renderizar página." });
     }
 }
 
-module.exports = { loginPage, adminPage, createProductPage };
+//  === CATEGORY ===
+
+function createCategoryPage(req, res) {
+    try {
+        res.render("create-category");
+    } catch (error) {
+        res.status(500).json({ error: "Erro ao renderizar página." });
+    }
+}
+
+module.exports = { loginPage, adminPage, createProductPage, createCategoryPage };
