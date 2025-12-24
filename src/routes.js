@@ -1,7 +1,8 @@
 const { Router } = require("express");
 const { authAdmin, createNewAdmin, createNewProduct } = require("./controllers/admin-controller");
 const { loginAuthMiddleware, adminAuthMiddleware } = require("./middlewares/authMiddleware");
-const { loginPage, adminPage, createProductPage, createCategoryPage } = require("./controllers/admin-render-controller");
+const { loginPage, adminPage, createProductPage } = require("./controllers/admin-render-controller");
+const { createCategoryPage, createNewCategory } = require("./controllers/admin-category-controller");
 const path = require("path");
 const multer = require("multer");
 
@@ -26,10 +27,15 @@ router.get("/admin", adminAuthMiddleware, adminPage);
 // Produto
 router.get("/admin/product/create", createProductPage);
 router.post("/admin/product/create/new", uploadImg.single("image-input"), createNewProduct);
+
 // Categoria
-router.get("/admin/category/create", createCategoryPage)
+router.get("/admin/category/create", createCategoryPage);
+router.post("/admin/category/create/new", createNewCategory);
 
 // Rota manual. Incompleta.
 router.post("/create", createNewAdmin);
+
+// Error
+router.get("/error", (req, res) => res.render("error"));
 
 module.exports = router;

@@ -24,14 +24,4 @@ function createProductPage(req, res) {
     }
 }
 
-//  === CATEGORY ===
-
-function createCategoryPage(req, res) {
-    try {
-        res.render("create-category");
-    } catch (error) {
-        res.status(500).json({ error: "Erro ao renderizar página." });
-    }
-}
-
-module.exports = { loginPage, adminPage, createProductPage, createCategoryPage };
+module.exports = { loginPage, adminPage, createProductPage };

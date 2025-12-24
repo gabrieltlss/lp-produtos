@@ -2,8 +2,15 @@ main {
     min-height: 100vh;
 }
 
+.create-category-container {
+    max-width: 1000px;
+    width: 100%;
+}
+
 .list-category-container {
-    margin-top: 80px;
+    margin-top: 16px;
+    max-width: 1000px;
+    width: 100%;
 }
 
 @media screen and (min-width: 601px) {
@@ -11,18 +18,10 @@ main {
         grid-template-columns: 200px auto;
         gap: 24px;
     }
-}
 
-@media screen and (min-width: 992px) {
-    .create-category-container {
+    .creation-section {
         display: flex;
+        flex-direction: column;
         align-items: center;
-        justify-content: center;
-        gap: 32px;
-    }
-
-    #create-category-form,
-    #delete-category-form {
-        width: 100%;
     }
 }
