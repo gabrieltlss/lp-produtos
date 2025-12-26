@@ -1,4 +1,4 @@
-const { getAllCategories, createCategory, deleteCategory } = require("../services/categoryServices");
+const { getAllCategories, createCategory, deleteCategory, updateCategory } = require("../services/categoryServices");
 
 // === Render category related pages ===
 async function createCategoryPage(req, res) {
@@ -22,6 +22,19 @@ async function deleteCategoryPage(req, res) {
             return;
         }
         res.render("delete-category", { categoryExist: getCategories.valid, categories: getCategories.res });
+    } catch (error) {
+        res.redirect("/error");
+    }
+}
+
+async function updateCategoryPage(req, res) {
+    try {
+        const getCategories = await getAllCategories();
+        if (getCategories.valid === false) {
+            res.render("update-category", { message: getCategories.error });
+            return;
+        }
+        res.render("update-category", { categoryExist: getCategories.valid, categories: getCategories.res });
     } catch (error) {
         res.redirect("/error");
     }
@@ -74,7 +87,6 @@ async function createNewCategory(req, res) {
 async function deleteInformedCategory(req, res) {
     const categoryId = Number(req.body["category-id"]);
     try {
-        // Não preciso cheacar se categorias existem, graças à chacagem no ejs.
         let getCategories = await getAllCategories();
         const informedCategoryExists = getCategories.res.find(c => c.id === categoryId);
         if (!informedCategoryExists) {
@@ -86,7 +98,6 @@ async function deleteInformedCategory(req, res) {
             return;
         }
 
-        // Deletar categoria
         const deleteInformedCategory = await deleteCategory(categoryId);
         if (deleteInformedCategory.valid === false) {
             res.render("delete-category", {
@@ -103,4 +114,54 @@ async function deleteInformedCategory(req, res) {
     }
 }
 
-module.exports = { createCategoryPage, createNewCategory, deleteCategoryPage, deleteInformedCategory };
+async function updateInformedCategory(req, res) {
+    const categoryId = Number(req.body["category-id"]);
+    const categoryName = req.body["category-name"];
+
+    try {
+        // Não preciso checar se categorias existem.
+        const getCategories = await getAllCategories();
+        const informedIdExists = getCategories.res.find(c => c.id === categoryId);
+        if (!informedIdExists) {
+            res.render("update-category", {
+                categoryExist: getCategories.valid,
+                categories: getCategories.res,
+                updateError: "A categoria informada não existe"
+            });
+            return;
+        }
+
+        const informedNameExists = getCategories.res.find(c => c.name === categoryName);
+        if (informedNameExists) {
+            res.render("update-category", {
+                categoryExist: getCategories.valid,
+                categories: getCategories.res,
+                updateError: "O nome informado já existe"
+            });
+            return;
+        }
+
+        const updateInformedCategory = await updateCategory(categoryId, categoryName);
+        if (updateInformedCategory.valid === false) {
+            res.render("update-category", {
+                categoryExist: getCategories.valid,
+                categories: getCategories.res,
+                updateError: updateInformedCategory.error
+            });
+            return;
+        }
+
+        res.redirect("/admin/category/update");
+    } catch (error) {
+        res.redirect("/error");
+    }
+}
+
+module.exports = {
+    createCategoryPage,
+    createNewCategory,
+    deleteCategoryPage,
+    deleteInformedCategory,
+    updateCategoryPage,
+    updateInformedCategory
+};

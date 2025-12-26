@@ -22,16 +22,15 @@
 
                     <section class="creation-section">
                         <%if (typeof categoryExist==="undefined" ) {%>
-                            <h2 class="w3-center">Excluir categorias</h2>
+                            <h2 class="w3-center">Atualizar categorias</h2>
                             <h3 class="w3-center">
                                 <%=message%>
                             </h3>
 
                             <%} else {%>
                                 <div class="main-category-container">
-                                    <h3>Excluir Categoria</h3>
-                                    <form action="/admin/category/delete/post" method="post" id="delete-category-form">
-
+                                    <h3>Atualizar Categoria</h3>
+                                    <form action="/admin/category/update/post" method="post" id="update-category-form">
                                         <div class="w3-section">
                                             <label for="category-id">ID da categoria:</label>
                                             <input type="number" name="category-id" id="category-id" class="w3-input"
@@ -39,11 +38,17 @@
                                         </div>
 
                                         <div class="w3-section">
-                                            <button type="submit" class="w3-button w3-pink">Excluir</button>
+                                            <label for="category-name">Novo nome:</label>
+                                            <input type="text" name="category-name" id="category-name" class="w3-input"
+                                                required>
+                                        </div>
 
-                                            <%if(typeof deletionError !=="undefined" ){%>
+                                        <div class="w3-section">
+                                            <button type="submit" class="w3-button w3-pink">Atualizar</button>
+
+                                            <%if(typeof updateError !=="undefined" ){%>
                                                 <span class="w3-margin-left w3-small w3-text-red">
-                                                    <%= deletionError%>
+                                                    <%= updateError%>
                                                 </span>
                                                 <%}%>
                                         </div>
