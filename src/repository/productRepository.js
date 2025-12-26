@@ -1,20 +1,27 @@
-const { clientFunc, poolFunc } = require("../database/database");
+const { poolFunc } = require("../database/database");
 
 const pool = poolFunc();
 
-function getProductsDb() { }
+function getAllProductsDb() {
+    return pool.execute("SELECT * FROM products;");
+}
 
-// Parece que não preciso de um async para retornar promise neste caso;
-// pool.execute já o faz.
-function createProductDb(id, name, price, url, imgPath) {
+function createProductDb(name, price, url, imgPath, categoryId) {
     return pool.execute(
-        "INSERT INTO products (id, name, price, link, img) VALUES (?, ?, ?, ?, ?);",
-        [id, name, price, url, imgPath]
+        "INSERT INTO products (name, price, link, img, category_id) VALUES (?, ?, ?, ?, ?);",
+        [name, price, url, imgPath, categoryId]
     );
 }
 
-function updateProductDb() { }
+function updateProductDb(name, price, url, imgPath, categoryId, productId) {
+    return pool.execute(
+        "UPDATE products SET (name, price, link, img, category_id) VALUES (?, ?, ?, ?, ?) WHERE id = ?;",
+        [name, price, url, imgPath, categoryId, productId]
+    );
+}
 
-function deleteProductDb() { }
+function deleteProductDb(productId) {
+    return pool.execute("DELETE FROM products WHERE id = ?;", [productId]);
+}
 
-module.exports = { getProductsDb, createProductDb };
+module.exports = { getAllProductsDb, createProductDb, updateProductDb, deleteProductDb };
