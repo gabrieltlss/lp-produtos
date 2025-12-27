@@ -1,7 +1,8 @@
 const { Router } = require("express");
-const { authAdmin, createNewAdmin, createNewProduct } = require("./controllers/admin-controller");
+const { authAdmin, createNewAdmin } = require("./controllers/admin-controller");
 const { loginAuthMiddleware, adminAuthMiddleware } = require("./middlewares/authMiddleware");
-const { loginPage, adminPage, createProductPage } = require("./controllers/admin-render-controller");
+const { loginPage, adminPage } = require("./controllers/admin-render-controller");
+const { createProductPage, createNewProduct } = require("./controllers/admin-product-controller");
 const { createCategoryPage, createNewCategory, deleteCategoryPage, deleteInformedCategory, updateCategoryPage, updateInformedCategory } = require("./controllers/admin-category-controller");
 const path = require("path");
 const multer = require("multer");

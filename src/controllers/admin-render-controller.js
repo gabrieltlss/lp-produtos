@@ -14,14 +14,4 @@ function adminPage(req, res) {
     }
 }
 
-//  === PRODUCT ===
-
-function createProductPage(req, res) {
-    try {
-        res.render("create-product");
-    } catch (error) {
-        res.status(500).json({ error: "Erro ao renderizar página." });
-    }
-}
-
-module.exports = { loginPage, adminPage, createProductPage };
+module.exports = { loginPage, adminPage };

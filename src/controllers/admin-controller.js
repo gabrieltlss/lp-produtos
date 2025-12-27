@@ -1,7 +1,5 @@
 const { getAdmin, createAdmin, validatePassword } = require("../services/adminServices");
-const { createProduct } = require("../services/productsServices");
-const { validateInputs, validateProductFields } = require("../services/validationServices");
-const path = require("node:path");
+const { validateInputs } = require("../services/validationServices");
 
 async function authAdmin(req, res) {
     const email = req.body.email;
@@ -36,7 +34,6 @@ async function authAdmin(req, res) {
     res.redirect("/admin");
 }
 
-// Incompleta, será adaptada a página de admin, com res.render().
 async function createNewAdmin(req, res) {
     const email = req.body.email;
     const password = req.body.password;
@@ -64,34 +61,4 @@ async function createNewAdmin(req, res) {
     }
 }
 
-async function createNewProduct(req, res) {
-    const productName = req.body.name;
-    const productPrice = Number(req.body.price);
-    const productUrl = req.body.url;
-    const imgPath = path.join(__dirname, "../../public", "img", req.body.filepath);
-
-    console.log(productName, productPrice, productUrl, imgPath);
-
-    const fields = validateProductFields(productName, productPrice);
-    if (fields.valid === false) {
-        res.render("create", { errorMessage: fields.error });
-        return;
-    }
-
-    try {
-        const newProduct = await createProduct(productName, productPrice, productUrl, imgPath);
-        console.log(newProduct);
-        if (newProduct.valid === false) {
-            res.render("create", { errorMessage: newProduct.error });
-            return;
-        }
-    } catch (error) {
-        // Devo mudar no futuro - Não mostrar mensagem de erro do BD.
-        console.log(error.message)
-        res.render("create", { errorMessage: error.message });
-    }
-
-    res.json("Produto criado");
-}
-
-module.exports = { authAdmin, createNewAdmin, createNewProduct };
+module.exports = { authAdmin, createNewAdmin };
