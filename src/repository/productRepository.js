@@ -6,17 +6,17 @@ function getAllProductsDb() {
     return pool.execute("SELECT * FROM products;");
 }
 
-function createProductDb(name, price, url, imgPath, categoryId) {
+function createProductDb(name, price, url, img, categoryId) {
     return pool.execute(
         "INSERT INTO products (name, price, link, img, category_id) VALUES (?, ?, ?, ?, ?);",
-        [name, price, url, imgPath, categoryId]
+        [name, price, url, img, categoryId]
     );
 }
 
-function updateProductDb(name, price, url, imgPath, categoryId, productId) {
+function updateProductDb(name, price, url, img, categoryId, productId) {
     return pool.execute(
-        "UPDATE products SET (name, price, link, img, category_id) VALUES (?, ?, ?, ?, ?) WHERE id = ?;",
-        [name, price, url, imgPath, categoryId, productId]
+        "UPDATE products SET name = ?, price = ?, link = ?, img = ?, category_id = ? WHERE id = ?;",
+        [name, price, url, img, categoryId, productId]
     );
 }
 

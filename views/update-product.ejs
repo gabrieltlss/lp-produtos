@@ -80,14 +80,13 @@
 
                                         <div class="w3-section">
                                             <label for="image-input">Imagem:</label><br>
-                                            <input type="file" name="image-input" accept="image/*" id="image-input"
-                                                required>
+                                            <input type="file" name="image-input" accept="image/*" id="image-input">
                                         </div>
 
                                         <div class="w3-section">
                                             <button type="submit" class="w3-button w3-pink">Atualizar</button>
 
-                                            <%if (!typeof errorMessage==="undefined" ) {%>
+                                            <%if (typeof errorMessage!=="undefined" ) {%>
                                                 <span class="w3-margin-left w3-text-red w3-small">
                                                     <%= errorMessage%>
                                                 </span>
@@ -126,7 +125,7 @@
                                                         <img src="/img/<%= products[i].img%>" alt="" class="table-img">
                                                     </td>
                                                     <td>
-                                                        <button class="w3-button w3-pink" onclick="updateProduct({
+                                                        <a href="#update-section" class="w3-button w3-pink" onclick="updateProduct({
                                                                         id: '<%= products[i].id%>',
                                                                         name: '<%= products[i].name%>',
                                                                         price: '<%= products[i].price%>',
@@ -134,8 +133,8 @@
                                                                         img: '<%= products[i].img%>',
                                                                         categoryId: '<%= products[i].category_id%>',
                                                                     })">
-                                                            <a href="#update-section">Obter</a>
-                                                        </button>
+                                                            Obter
+                                                        </a>
                                                     </td>
                                                 </tr>
                                                 <%}%>

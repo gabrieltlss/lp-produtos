@@ -6,15 +6,15 @@ async function getAllProducts() {
     return { valid: true, res: rows };
 }
 
-async function createProduct(name, price, url, imgPath, categoryId) {
-    const [rows] = await createProductDb(name, price, url, imgPath, categoryId);
+async function createProduct(name, price, url, img, categoryId) {
+    const [rows] = await createProductDb(name, price, url, img, categoryId);
     if (!rows.affectedRows) return { valid: false, error: "Produto não criado." };
     return { valid: true };
 }
 
 async function updateProduct(productObject) {
-    const { name, price, url, imgPath, categoryId } = productObject;
-    const [rows] = await updateProductDb(name, price, url, imgPath, categoryId);
+    const { name, price, url, img, categoryId, productId } = productObject;
+    const [rows] = await updateProductDb(name, price, url, img, categoryId, productId);
     if (!rows.affectedRows) return { valid: false, error: "Produto não atualizado." };
     return { valid: true };
 }
@@ -25,4 +25,18 @@ async function deleteProduct(productId) {
     return { valid: true };
 }
 
-module.exports = { getAllProducts, createProduct, updateProduct, deleteProduct };
+function joinTables(products, categories) {
+    const populated = products.map((prod) => {
+        let categoryName = null;
+        for (let i = 0; i < categories.length; i++) {
+            if (categories[i].id === prod["category_id"]) {
+                categoryName = categories[i].name;
+                break;
+            }
+        }
+        return { ...prod, categoryName };
+    });
+    return populated;
+}
+
+module.exports = { getAllProducts, createProduct, updateProduct, deleteProduct, joinTables };
