@@ -7,7 +7,7 @@ async function createProductPage(req, res) {
     try {
         const getCategories = await getAllCategories();
         if (getCategories.valid === false) {
-            res.render("create-product", { message: "Crie categorias antes de criar um produto" });
+            res.render("create-product");
             return;
         }
         res.render("create-product", { categoriesExists: getCategories.valid, categories: getCategories.res });
