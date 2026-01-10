@@ -2,7 +2,7 @@ const { Router } = require("express");
 const { authAdmin, createNewAdmin } = require("./controllers/admin-controller");
 const { loginAuthMiddleware, adminAuthMiddleware } = require("./middlewares/authMiddleware");
 const { loginPage, adminPage } = require("./controllers/admin-render-controller");
-const { createProductPage, createNewProduct, updateProductsPage, updateProductController } = require("./controllers/admin-product-controller");
+const { createProductPage, createNewProduct, updateProductPage, updateProductController, deleteProductPage, deleteProductController } = require("./controllers/admin-product-controller");
 const { createCategoryPage, createNewCategory, deleteCategoryPage, deleteInformedCategory, updateCategoryPage, updateInformedCategory } = require("./controllers/admin-category-controller");
 const path = require("path");
 const multer = require("multer");
@@ -28,8 +28,10 @@ router.get("/admin", adminAuthMiddleware, adminPage);
 // Produto
 router.get("/admin/product/create", createProductPage);
 router.post("/admin/product/create/new", uploadImg.single("image-input"), createNewProduct);
-router.get("/admin/product/update", updateProductsPage);
+router.get("/admin/product/update", updateProductPage);
 router.post("/admin/product/update/post", uploadImg.single("image-input"), updateProductController);
+router.get("/admin/product/delete", deleteProductPage);
+router.post("/admin/product/delete/post", deleteProductController);
 
 // Categoria
 router.get("/admin/category/create", createCategoryPage);

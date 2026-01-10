@@ -1,4 +1,4 @@
-const { createProduct, getAllProducts, updateProduct, joinTables } = require("../services/productServices");
+const { createProduct, getAllProducts, updateProduct, joinTables, deleteProduct } = require("../services/productServices");
 const { getAllCategories } = require("../services/categoryServices")
 const { validateProductFields } = require("../services/validationServices");
 
@@ -12,12 +12,13 @@ async function createProductPage(req, res) {
         }
         res.render("create-product", { categoriesExists: getCategories.valid, categories: getCategories.res });
     } catch (error) {
-        res.status(500).json({ error: "Erro ao renderizar página." });
+        console.log(error.message);
+        res.render("create-product", { loadingError: "Erro ao renderizar página e seus dados." });
     }
 }
 // Falta-me terminar o tratamento de erro da página acima.
 
-async function updateProductsPage(req, res) {
+async function updateProductPage(req, res) {
     let getProducts = null;
     let getCategories = null;
 
@@ -44,7 +45,23 @@ async function updateProductsPage(req, res) {
         });
     } catch (error) {
         console.log(error.message);
-        res.status(500).json({ error: "Erro ao renderizar página." });
+        res.render("update-product", { loadingError: "Erro ao renderizar página e seus dados." });
+    }
+}
+
+async function deleteProductPage(req, res) {
+    let getProducts = null;
+    try {
+        getProducts = await getAllProducts();
+        if (getProducts.valid === false) {
+            res.render("delete-product", { message: "Crie produtos para poder exclui-los." });
+            return;
+        }
+
+        res.render("delete-product", { productsExists: getProducts.valid, products: getProducts.res });
+    } catch (error) {
+        console.log(error.message);
+        res.render("delete-product", { loadingError: "Erro ao renderizar página e seus dados." });
     }
 }
 
@@ -55,25 +72,25 @@ async function createNewProduct(req, res) {
     const productPrice = Number(req.body.price);
     const productUrl = req.body.url;
     const productImg = req.body.filepath;
-    const productCategory = Number(req.body.category);
+    const category = req.body.category;
+    const productCategory = category === "null" ? null : Number(category);
 
     const fields = validateProductFields(productName, productPrice);
     if (fields.valid === false) {
-        res.render("create", { errorMessage: fields.error });
+        res.render("create-product", { errorMessage: fields.error });
         return;
     }
 
     try {
         const newProduct = await createProduct(productName, productPrice, productUrl, productImg, productCategory);
         if (newProduct.valid === false) {
-            res.render("create", { errorMessage: newProduct.error });
+            res.render("create-product", { errorMessage: newProduct.error });
             return;
         }
-        res.json("Produto criado.");
+        res.redirect("/admin/product/create");
     } catch (error) {
-        // Devo mudar no futuro - Não mostrar mensagem de erro do BD.
         console.log(error.message);
-        res.render("create", { errorMessage: error.message });
+        res.render("create-product", { loadingError: "Erro ao renderizar página e seus dados." });
     }
 
 }
@@ -104,7 +121,7 @@ async function updateProductController(req, res) {
         res.status(500).json({ error: "Erro ao renderizar página." });
     }
 
-    const productExists = getProducts.res.find(prod => +prod.id === productId);
+    const productExists = getProducts.res.find(prod => Number(prod.id) === productId);
     if (!productExists) {
         if (getCategories.valid === false) {
             res.render("update-product", {
@@ -186,4 +203,55 @@ async function updateProductController(req, res) {
     return;
 }
 
-module.exports = { createProductPage, createNewProduct, updateProductsPage, updateProductController };
+async function deleteProductController(req, res) {
+    const productId = Number(req.body["product-id"]);
+
+    let getProducts = null;
+    try {
+        getProducts = await getAllProducts();
+        if (getProducts.valid === false) {
+            res.render("delete-product", { message: "Crie produtos para poder exclui-los." });
+            return;
+        }
+    } catch (error) {
+        console.log(error.message);
+        res.render("delete-product", { loadingError: "Erro ao renderizar página e seus dados." });
+    }
+
+    const productExists = getProducts.res.find((prod) => Number(prod.id) === productId);
+    if (!productExists) {
+        res.render("delete-product", {
+            productsExists: getProducts.valid,
+            products: getProducts.res,
+            errorMessage: "O produto informado não existe."
+        });
+        return;
+    }
+
+    try {
+        const deletedProduct = await deleteProduct(productId);
+        if (deletedProduct.valid === false) {
+            res.render("delete-product", {
+                productsExists: getProducts.valid,
+                products: getProducts.res,
+                errorMessage: deletedProduct.error
+            });
+            return;
+        }
+
+        res.redirect("/admin/product/delete/");
+    } catch (error) {
+        // Mudar isto. Ora, não é erro de renderização. Deve renderizar com 'errorMessage'.
+        console.log(error.message);
+        res.render("delete-product", { loadingError: "Erro ao renderizar página e seus dados." });
+    }
+}
+
+module.exports = {
+    createProductPage,
+    createNewProduct,
+    updateProductPage,
+    updateProductController,
+    deleteProductPage,
+    deleteProductController
+};
