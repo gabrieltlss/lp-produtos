@@ -33,6 +33,11 @@ const router = Router();
 
 const { uploadImg } = require("./middlewares/multerMiddleware");
 
+// Rota para manter node ativo.
+router.get("/health", (req, res) => {
+    res.status(200).send("OK");
+});
+
 // Rotas do administrador
 router.get("/login", loginAuthMiddleware, loginPage);
 router.post("/authAdmin", authAdmin);
