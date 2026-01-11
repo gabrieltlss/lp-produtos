@@ -35,6 +35,7 @@ const { uploadImg } = require("./middlewares/multerMiddleware");
 
 // Rota para manter node ativo.
 router.get("/health", (req, res) => {
+    console.log(`Health route - ${new Date()}`);
     res.status(200).send("OK");
 });
 
