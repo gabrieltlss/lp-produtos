@@ -59,7 +59,7 @@ function getRecentProducts(productsRows) {
     const date = new Date();
     const recentDay = date.getDate() - 5;
     const recentProd = productsRows.filter((prod) =>
-        prod["created_at"].getDate() > recentDay
+        prod["date"].getDate() > recentDay
     );
     return recentProd.length;
 }
