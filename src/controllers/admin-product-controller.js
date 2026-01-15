@@ -1,3 +1,5 @@
+const fs = require("node:fs");
+const path = require("node:path");
 const {
     createProduct,
     getAllProducts,
@@ -291,9 +293,21 @@ async function deleteProductController(req, res) {
             return;
         }
 
+        // Excluir imagem do produto excluído.
+        const imgPath = path.join(
+            __dirname,
+            "../",
+            "../",
+            "public",
+            "img",
+            "products",
+            productExists.img,
+        );
+
+        fs.unlinkSync(imgPath);
+
         res.redirect("/admin/product/delete/");
     } catch (error) {
-        // Mudar isto. Ora, não é erro de renderização. Deve renderizar com 'errorMessage'.
         console.log(error.message);
         res.render("delete-product", {
             loadingError: "Erro ao renderizar página e seus dados.",
